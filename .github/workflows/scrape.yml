@@ -1,0 +1,61 @@
+name: Scrape Course PDFs
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scraper
+        id: scrape
+        # exit 1 means "changes detected" — not a failure.
+        # We capture the exit code as an output and continue.
+        run: |
+          python scrape.py
+          echo "changed=$?" >> "$GITHUB_OUTPUT"
+        continue-on-error: true
+
+      - name: Commit and push changes
+        if: steps.scrape.outputs.changed == '1'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pdfs/ manifest.json
+          git commit -m "chore: update course plan PDFs [skip ci]"
+          git push origin HEAD
+
+      - name: Trigger generate workflow
+        if: steps.scrape.outputs.changed == '1'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              workflow_id: 'generate.yml',
+              ref: 'main',
+            });
+
+      - name: No changes detected
+        if: steps.scrape.outputs.changed != '1'
+        run: echo "No changes detected, skipping commit."
