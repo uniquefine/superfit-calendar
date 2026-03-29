@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//superfit-calendar//body-pump//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Body Pump
+X-WR-TIMEZONE:Europe/Berlin
+BEGIN:VEVENT
+SUMMARY:Body Pump
+DTSTART;TZID=Europe/Berlin:20260407T090000
+DTEND;TZID=Europe/Berlin:20260407T095000
+DTSTAMP:20260329T151920Z
+UID:body-pump-friedrichshain-2026-04-07-0900@superfit-calendar
+LOCATION:Friedrichshain\, Frankfurter Allee 111\, 10247 Berlin
+END:VEVENT
+END:VCALENDAR
