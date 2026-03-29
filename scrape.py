@@ -5,8 +5,7 @@ Behaviour
 ---------
 - Fetches studio pages, discovers PDF links, downloads new ones.
 - Tracks everything in manifest.json.
-- Deletes PDFs that have disappeared from the studio page AND were first seen
-  more than RETENTION_DAYS ago.
+- Deletes PDFs that have disappeared from the studio page.
 - Exit code 0  → nothing changed (caller skips git commit).
 - Exit code 1  → files were added or removed (caller should commit).
 """
@@ -17,7 +16,7 @@ import logging
 import sys
 import time
 import traceback
-from datetime import date, datetime, timedelta
+from datetime import date
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
@@ -35,7 +34,6 @@ STUDIOS: dict[str, str] = {
 
 MANIFEST_PATH = Path("manifest.json")
 PDF_DIR = Path("pdfs")
-RETENTION_DAYS = 180
 
 HEADERS = {
     "User-Agent": (
@@ -193,28 +191,17 @@ def process_studio(studio: str, page_url: str, manifest: dict) -> bool:
             log.info("SKIPPED %s (already in manifest)", key)
 
     # 3. Handle PDFs that are no longer on the page
-    cutoff = date.today() - timedelta(days=RETENTION_DAYS)
     keys_for_studio = [k for k, v in manifest.items() if v.get("studio") == studio]
 
     for key in keys_for_studio:
-        entry = manifest[key]
-        source_url = entry["source_url"]
-        first_seen = datetime.fromisoformat(entry["first_seen"]).date()
+        source_url = manifest[key]["source_url"]
 
         if source_url in discovered_set:
             log.info("KEPT    %s (still listed on page)", key)
             continue
 
-        if first_seen > cutoff:
-            log.info(
-                "KEPT    %s (not on page but first_seen=%s is within retention window)",
-                key,
-                first_seen,
-            )
-            continue
-
-        # Gone from page and old enough → delete
-        log.info("REMOVED %s (not on page, first_seen=%s > %d days ago)", key, first_seen, RETENTION_DAYS)
+        # Gone from page → delete immediately
+        log.info("REMOVED %s (not on page)", key)
         local_path = PDF_DIR / key
         if local_path.exists():
             local_path.unlink()
