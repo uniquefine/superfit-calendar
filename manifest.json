@@ -1,1 +1,42 @@
-{}
+{
+  "friedrichshain/6983663e7295b6e68676a545_TT_FH_01.02.26.pdf": {
+    "first_seen": "2026-03-29",
+    "source_url": "https://cdn.prod.website-files.com/6814daccdbfcd1feda6231bc/6983663e7295b6e68676a545_TT_FH_01.02.26.pdf",
+    "studio": "friedrichshain"
+  },
+  "friedrichshain/69a59059427b7defe228d0a4_KP_FH_01.06.26.pdf": {
+    "first_seen": "2026-03-29",
+    "source_url": "https://cdn.prod.website-files.com/6814daccdbfcd1feda6231bc/69a59059427b7defe228d0a4_KP_FH_01.06.26.pdf",
+    "studio": "friedrichshain"
+  },
+  "friedrichshain/69b92f3f4cf1b563911b1a0a_Osterkursplan_FH_2026%201.pdf": {
+    "first_seen": "2026-03-29",
+    "source_url": "https://cdn.prod.website-files.com/6814daccdbfcd1feda6231bc/69b92f3f4cf1b563911b1a0a_Osterkursplan_FH_2026%201.pdf",
+    "studio": "friedrichshain"
+  },
+  "mitte/6941554ca3f97f6d54048998_TT_MI_01.01.26.pdf": {
+    "first_seen": "2026-03-29",
+    "source_url": "https://cdn.prod.website-files.com/6814daccdbfcd1feda6231bc/6941554ca3f97f6d54048998_TT_MI_01.01.26.pdf",
+    "studio": "mitte"
+  },
+  "mitte/6992d8f06c3b4f6940e12243_KP_MI_16.02.26.pdf": {
+    "first_seen": "2026-03-29",
+    "source_url": "https://cdn.prod.website-files.com/6814daccdbfcd1feda6231bc/6992d8f06c3b4f6940e12243_KP_MI_16.02.26.pdf",
+    "studio": "mitte"
+  },
+  "mitte/69b92f1336c5ac6753e2d0e7_Osterkursplan_MI_2026%201.pdf": {
+    "first_seen": "2026-03-29",
+    "source_url": "https://cdn.prod.website-files.com/6814daccdbfcd1feda6231bc/69b92f1336c5ac6753e2d0e7_Osterkursplan_MI_2026%201.pdf",
+    "studio": "mitte"
+  },
+  "mitte/69c5038b5897fb183a18f550_TT_MI_01.04.26.pdf": {
+    "first_seen": "2026-03-29",
+    "source_url": "https://cdn.prod.website-files.com/6814daccdbfcd1feda6231bc/69c5038b5897fb183a18f550_TT_MI_01.04.26.pdf",
+    "studio": "mitte"
+  },
+  "mitte/69c50398778a663d7831937d_KP_MI_07.04.26.pdf": {
+    "first_seen": "2026-03-29",
+    "source_url": "https://cdn.prod.website-files.com/6814daccdbfcd1feda6231bc/69c50398778a663d7831937d_KP_MI_07.04.26.pdf",
+    "studio": "mitte"
+  }
+}

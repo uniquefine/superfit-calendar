@@ -29,11 +29,11 @@ jobs:
       - name: Run scraper
         id: scrape
         # exit 1 means "changes detected" — not a failure.
-        # We capture the exit code as an output and continue.
+        # set +e prevents bash from aborting on exit 1 so we can capture it.
         run: |
+          set +e
           python scrape.py
           echo "changed=$?" >> "$GITHUB_OUTPUT"
-        continue-on-error: true
 
       - name: Commit and push changes
         if: steps.scrape.outputs.changed == '1'
@@ -43,18 +43,6 @@ jobs:
           git add pdfs/ manifest.json
           git commit -m "chore: update course plan PDFs [skip ci]"
           git push origin HEAD
-
-      - name: Trigger generate workflow
-        if: steps.scrape.outputs.changed == '1'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo:  context.repo.repo,
-              workflow_id: 'generate.yml',
-              ref: 'main',
-            });
 
       - name: No changes detected
         if: steps.scrape.outputs.changed != '1'
