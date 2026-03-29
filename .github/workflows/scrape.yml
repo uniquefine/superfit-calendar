@@ -29,11 +29,11 @@ jobs:
       - name: Run scraper
         id: scrape
         # exit 1 means "changes detected" — not a failure.
-        # We capture the exit code as an output and continue.
+        # set +e prevents bash from aborting on exit 1 so we can capture it.
         run: |
+          set +e
           python scrape.py
           echo "changed=$?" >> "$GITHUB_OUTPUT"
-        continue-on-error: true
 
       - name: Commit and push changes
         if: steps.scrape.outputs.changed == '1'
