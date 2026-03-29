@@ -1,0 +1,26 @@
+[
+  {
+    "course": "Body Attack",
+    "studio": "Friedrichshain",
+    "address": "Frankfurter Allee 111, 10247 Berlin",
+    "date": "2026-04-07",
+    "start": "20:00",
+    "end": "20:50"
+  },
+  {
+    "course": "Body Attack",
+    "studio": "Mitte",
+    "address": "Grunerstraße 20, 10179 Berlin",
+    "date": "2026-04-08",
+    "start": "18:00",
+    "end": "18:50"
+  },
+  {
+    "course": "Body Pump",
+    "studio": "Friedrichshain",
+    "address": "Frankfurter Allee 111, 10247 Berlin",
+    "date": "2026-04-07",
+    "start": "09:00",
+    "end": "09:50"
+  }
+]
