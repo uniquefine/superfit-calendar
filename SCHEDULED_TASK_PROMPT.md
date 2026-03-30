@@ -35,9 +35,32 @@ Studios:
 
 ---
 
-### PDF Reading Strategy
+### Pre-extracted OCR Text
 
-**The PDFs are graphical — course names are rendered inside coloured image blocks, not as selectable text.** Plain text extraction returns only time-slot strings and day headers.
+For every PDF in the repo, a plain-text OCR extract is committed alongside it at:
+
+```
+ocr/<studio>/<pdf_stem>.txt
+```
+
+For example:
+```
+ocr/mitte/6992d8f06c3b4f6940e12243_KP_MI_16.02.26.txt
+ocr/friedrichshain/6983663e7295b6e68676a545_TT_FH_01.02.26.txt
+```
+
+**Use these files as your primary source.** A good extract contains recognisable course names (e.g. `BODYPUMP`, `BODYATTACK`, `ZUMBA FITNESS`, `BAUCH`, `TRX`), time slots (`09:00 - 09:50`), and day headers (`MONTAG`, `DIENSTAG`, …). The regular Kursplan and Teamtraining PDFs extract reliably at 300 DPI with PSM 11.
+
+**Only fall back to visual PDF rendering** (see below) if:
+- The `.txt` file is missing or empty
+- Fewer than 50 words were extracted
+- No recognisable course names or time patterns appear in the text
+
+---
+
+### PDF Reading Strategy (fallback)
+
+**The PDFs are graphical — course names are rendered inside coloured image blocks, not as selectable text.** Use this approach only if the pre-extracted OCR text (above) is missing or appears garbled.
 
 Use PyMuPDF (`pip install pymupdf`) to render each page as a high-resolution PNG, then read the image visually:
 

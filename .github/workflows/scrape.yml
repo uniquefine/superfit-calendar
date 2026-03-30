@@ -24,26 +24,25 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-deu
+          pip install -r requirements.txt pymupdf pytesseract Pillow
 
       - name: Run scraper
-        id: scrape
         # exit 1 means "changes detected" — not a failure.
         # set +e prevents bash from aborting on exit 1 so we can capture it.
         run: |
           set +e
           python scrape.py
-          echo "changed=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Extract OCR text from PDFs
+        run: python pdf_ocr.py --output-dir ocr
 
       - name: Commit and push changes
-        if: steps.scrape.outputs.changed == '1'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add pdfs/ manifest.json
-          git commit -m "chore: update course plan PDFs [skip ci]"
+          git add pdfs/ manifest.json ocr/
+          git diff --cached --quiet && echo "No changes to commit." && exit 0
+          git commit -m "chore: update course plan PDFs and OCR results [skip ci]"
           git push origin HEAD
-
-      - name: No changes detected
-        if: steps.scrape.outputs.changed != '1'
-        run: echo "No changes detected, skipping commit."

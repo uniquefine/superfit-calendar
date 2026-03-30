@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
-Test script: PDF → high-quality image → Tesseract OCR text extraction.
+PDF → high-quality image → Tesseract OCR text extraction.
 
 Usage:
-    python test_pdf_ocr.py [--save-images] [--psm PSM] [--dpi DPI]
+    python pdf_ocr.py [--output-dir DIR] [--save-images] [--psm PSM] [--dpi DPI]
 
 Options:
-    --save-images   Save rendered PNG images to pdf_images/ for inspection
-    --psm PSM       Tesseract page segmentation mode (default: 11 = sparse text)
-    --dpi DPI       Render resolution in DPI (default: 300)
+    --output-dir DIR  Write per-PDF OCR text to DIR/<studio>/<pdf_stem>.txt
+    --save-images     Save rendered PNG images to pdf_images/ for inspection
+    --psm PSM         Tesseract page segmentation mode (default: 11 = sparse text)
+    --dpi DPI         Render resolution in DPI (default: 300)
+    --lang LANG       Tesseract language(s) (default: deu)
 
 Requirements:
     pip install pymupdf pytesseract Pillow
@@ -79,7 +81,9 @@ def word_count(text: str) -> int:
 # --- main -----------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Test Tesseract OCR on superfit PDFs")
+    parser = argparse.ArgumentParser(description="Tesseract OCR extraction for superfit PDFs")
+    parser.add_argument("--output-dir", metavar="DIR",
+                        help="Write per-PDF text files to DIR/<studio>/<pdf_stem>.txt")
     parser.add_argument("--save-images", action="store_true",
                         help="Save rendered PNGs to pdf_images/ for inspection")
     parser.add_argument("--psm", type=int, default=11,
@@ -89,6 +93,8 @@ def main():
     parser.add_argument("--lang", default="deu",
                         help="Tesseract language(s), e.g. 'deu' or 'deu+eng' (default: deu)")
     args = parser.parse_args()
+
+    output_dir = Path(args.output_dir).resolve() if args.output_dir else None
 
     check_dependencies()
 
@@ -124,6 +130,7 @@ def main():
             continue
 
         total_words = 0
+        page_texts = []
 
         for page_num, img in enumerate(pages, start=1):
             print(f"\n--- Page {page_num}/{len(pages)} "
@@ -141,6 +148,7 @@ def main():
                 print(f"    ERROR during OCR: {e}")
                 continue
 
+            page_texts.append(text)
             words = word_count(text)
             total_words += words
             print(f"    Words extracted: {words}")
@@ -150,6 +158,14 @@ def main():
                 stripped = line.strip()
                 if stripped:
                     print(f"    {stripped}")
+
+        if output_dir is not None and page_texts:
+            out_subdir = output_dir / studio
+            out_subdir.mkdir(parents=True, exist_ok=True)
+            stem = pdf_path.stem.replace("%20", "_").replace(" ", "_")
+            out_file = out_subdir / f"{stem}.txt"
+            out_file.write_text("\n\n".join(page_texts), encoding="utf-8")
+            print(f"\n  Saved OCR text → {out_file.relative_to(repo_root)}")
 
         summary.append((f"{studio}/{pdf_path.name}", len(pages), total_words))
 
